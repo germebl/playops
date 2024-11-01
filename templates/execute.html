@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Playbook Ausführen{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Playbook Ausführung</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('execute_playbook', playbook_id=playbook.id) }}">
+                    {% for var in playbook.variables %}
+                        <div class="mb-4 d-flex flex-column">
+                            <label class="form-label fw-bold" for="{{ var.name }}">{{ var.name }}</label>
+                            <div class="input-group">
+                                {% if var.type == 'text' %}
+                                    <input type="text" name="{{ var.name }}" class="form-control" required="{{ var.required|lower }}" placeholder="Geben Sie {{ var.name }} ein" />
+                                {% elif var.type == 'dropdown' %}
+                                    <select name="{{ var.name }}" class="form-select" required="{{ var.required|lower }}">
+                                        <option value="" disabled selected>Wählen Sie eine Option</option>
+                                        {% for option in var.options %}
+                                            <option value="{{ option }}">{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% elif var.type == 'checkbox' %}
+                                    <div class="form-check">
+                                        <input type="checkbox" name="{{ var.name }}" class="form-check-input" value="true" id="{{ var.name }}" />
+                                        <label class="form-check-label" for="{{ var.name }}">{{ var.name }}</label>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-success">Playbook Ausführen</button>
+                </form>
+            </div>
+        </div>
+
+        {% if output %}
+            <h2 class="mt-4">Ausgabe:</h2>
+            <div class="bg-light p-3 border rounded">
+                <pre>{{ output }}</pre>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Playbooks{% endblock %}
+
+{% block content %}
+
+    <h2>Verfügbare Playbooks</h2>
+
+    <ul class="list-group">
+        {% for playbook in playbooks %}
+            <li class="list-group-item">
+                <a href="{{ url_for('execute_playbook', playbook_id=playbook.id) }}">
+                    {{ playbook.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

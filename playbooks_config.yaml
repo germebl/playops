@@ -1,0 +1,27 @@
+playbooks:
+  - id: 1
+    name: "Test-Playbook"
+    description: "Ein einfaches Test-Playbook zur Prüfung der Übergave von Variablen."
+    variables:
+      - name: "subnet"
+        type: "dropdown"
+        options: ["fe", "be", "db", "dev"]
+        required: true
+      - name: "nat"
+        type: "dropdown"
+        options: ["private", "public"]
+        required: true
+      - name: "hostname"
+        type: "text"
+        required: true
+      - name: "server_type"
+        type: "dropdown"
+        options: ["cx22", "cx32", "cx42"]
+        required: true
+      - name: "location"
+        type: "dropdown"
+        options: ["fsn1", "nbg1", "hel1"]
+        required: true
+      - name: "is_enabled"
+        type: "checkbox"
+        required: false

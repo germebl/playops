@@ -1,0 +1,19 @@
+.form-label {
+    color: #343a40; /* Dunkelgrau für bessere Lesbarkeit */
+}
+
+.form-control,
+.form-select {
+    border: 2px solid #ced4da; /* Etwas dickere Ränder für mehr Definition */
+    border-radius: 0.375rem; /* Abgerundete Ecken */
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #80bdff; /* Blaue Umrandung beim Fokussieren */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Schatten beim Fokussieren */
+}
+
+.btn-success {
+    margin-top: 1rem; /* Abstand zum vorherigen Element */
+}
