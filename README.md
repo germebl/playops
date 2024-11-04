@@ -23,8 +23,8 @@ PlayOps ist eine einfache Webanwendung zum Ausführen von Ansible-Playbooks übe
 
 1. **Repository klonen**
    ```bash
-   git clone https://github.com/your-username/PlayOps.git
-   cd PlayOps
+   git clone https://github.com/your-username/playops.git
+   cd playops
    ```
 
 2. **Virtuelle Umgebung einrichten**
