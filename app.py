@@ -71,21 +71,31 @@ def execute_playbook(playbook_id):
         playbook_vars = {}
         for var in playbook_config['variables']:
             if var['type'] == 'checkbox':
-                # Überprüfe, ob die Checkbox gesetzt wurde
-                playbook_vars[var['name']] = request.form.get(var['name'], 'false')  # Standardwert 'false' setzen
+                playbook_vars[var['name']] = request.form.get(var['name'], 'false')
             else:
                 playbook_vars[var['name']] = request.form[var['name']]
 
+        # Playbook-Pfad und Verzeichnis festlegen
+        playbook_path = playbook_config['path']
+        playbook_dir = os.path.dirname(playbook_path)
+
         # Erstelle den Befehl zum Ausführen des Playbooks
-        command = ['ansible-playbook', 'main.yaml']
+        command = ['ansible-playbook', playbook_path]
 
         # Füge die Variablen zum Befehl hinzu
         for key, value in playbook_vars.items():
             command.append('-e')
             command.append(f"{key}={value}")
 
-        # Führe den Befehl aus
-        result = subprocess.run(command, capture_output=True, text=True)
+        # Debugging-Ausgabe des Befehls
+        print("Auszuführender Befehl:", " ".join(command))
+        
+        try:
+            # Führe den Befehl im Verzeichnis des Playbooks aus
+            result = subprocess.run(command, capture_output=True, text=True, cwd=playbook_dir, check=True)
+        except subprocess.CalledProcessError as e:
+            print("Fehler beim Ausführen des Befehls:", e.stderr)
+            return "Fehler bei der Playbook-Ausführung", 500
 
         # Zeige die Ausgabe an
         return render_template('execute.html', playbook=playbook_config, output=result.stdout, error=result.stderr)
