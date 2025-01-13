@@ -4,7 +4,14 @@
 
 {% block content %}
     <div class="container mt-4">
-        <h1 class="mb-4">Playbook Ausführung</h1>
+
+        <!-- Card für Playbook-Name und Beschreibung -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2>{{ playbook.name }}</h2>
+                <p>{{ playbook.description }}</p>
+            </div>
+        </div>
 
         <div class="card">
             <div class="card-body">
@@ -42,5 +49,12 @@
                 <pre>{{ output }}</pre>
             </div>
         {% endif %}
+        {% if error %}
+            <h2 class="mt-4">Warnungen/Fehler:</h2>
+            <div class="bg-light p-3 border rounded">
+                <pre>{{ error }}</pre>
+            </div>
+        {% endif %}
+
     </div>
 {% endblock %}

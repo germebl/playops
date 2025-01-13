@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from config import Config
 import subprocess
 import yaml
+import os
 
 app = Flask(__name__)
-app.secret_key = 'dein_geheimer_schlüssel'  # Ändere diesen Schlüssel zu etwas Sicherem
+app.config.from_object(Config)  # Lädt alle Konfigurationsvariablen aus config.py
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'  # Dies setzt die Login-Route
@@ -67,13 +69,14 @@ def execute_playbook(playbook_id):
         return "Playbook nicht gefunden", 404
 
     if request.method == 'POST':
-        # Erstelle die Umgebungsvariablen aus den POST-Daten
+        # Erstelle die Umgebungsvariablen aus den POST-Daten, falls welche vorhanden sind
         playbook_vars = {}
-        for var in playbook_config['variables']:
-            if var['type'] == 'checkbox':
-                playbook_vars[var['name']] = request.form.get(var['name'], 'false')
-            else:
-                playbook_vars[var['name']] = request.form[var['name']]
+        if 'variables' in playbook_config:
+            for var in playbook_config['variables']:
+                if var['type'] == 'checkbox':
+                    playbook_vars[var['name']] = request.form.get(var['name'], 'false')
+                else:
+                    playbook_vars[var['name']] = request.form[var['name']]
 
         # Playbook-Pfad und Verzeichnis festlegen
         playbook_path = playbook_config['path']
@@ -82,7 +85,7 @@ def execute_playbook(playbook_id):
         # Erstelle den Befehl zum Ausführen des Playbooks
         command = ['ansible-playbook', playbook_path]
 
-        # Füge die Variablen zum Befehl hinzu
+        # Füge die Variablen zum Befehl hinzu, falls vorhanden
         for key, value in playbook_vars.items():
             command.append('-e')
             command.append(f"{key}={value}")
@@ -90,18 +93,18 @@ def execute_playbook(playbook_id):
         # Debugging-Ausgabe des Befehls
         print("Auszuführender Befehl:", " ".join(command))
         
-        try:
-            # Führe den Befehl im Verzeichnis des Playbooks aus
-            result = subprocess.run(command, capture_output=True, text=True, cwd=playbook_dir, check=True)
-        except subprocess.CalledProcessError as e:
-            print("Fehler beim Ausführen des Befehls:", e.stderr)
-            return "Fehler bei der Playbook-Ausführung", 500
+        # Führe den Befehl aus, ohne dass bei Fehlern eine Exception ausgelöst wird
+        result = subprocess.run(command, capture_output=True, text=True, cwd=playbook_dir, check=False)
 
-        # Zeige die Ausgabe an
-        return render_template('execute.html', playbook=playbook_config, output=result.stdout, error=result.stderr)
+        # Unabhängig vom Erfolg das Ergebnis und eventuelle Fehler an das Template übergeben
+        output = result.stdout
+        error = result.stderr
 
-    # Bei GET-Anfrage zeige das Formular für die Eingabe der Variablen
+        # Render die execute.html mit der Ausgabe
+        return render_template('execute.html', playbook=playbook_config, output=output, error=error)
+
+    # Bei GET-Anfrage zeige das Formular für die Eingabe der Variablen (falls vorhanden)
     return render_template('execute.html', playbook=playbook_config)
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    app.run(host=app.config['HOST'], port=app.config['PORT'], debug=app.config['DEBUG'])

@@ -1,27 +1,70 @@
 playbooks:
   - id: 1
-    name: "Test-Playbook"
-    description: "Ein einfaches Test-Playbook zur Prüfung der Übergave von Variablen."
+    name: "Hetzner Server Provisioning: Server Types"
+    description: "Eine detaillierte Erklärung findest du in der README.md."
+    path: "/opt/powerbook/hetzner-server-provisioning/server_types.yaml"
+  - id: 2
+    name: "Hetzner Server Provisioning: Server erstellen"
+    description: "Eine detaillierte Erklärung findest du in der README.md."
+    path: "/opt/powerbook/hetzner-server-provisioning/main.yaml"
     variables:
       - name: "subnet"
         type: "dropdown"
         options: ["fe", "be", "db", "dev"]
-        required: true
+        required: "true"
       - name: "nat"
         type: "dropdown"
-        options: ["private", "public"]
-        required: true
+        options: ["private", "pub"]
+        required: "true"
       - name: "hostname"
         type: "text"
-        required: true
+        required: "true"
       - name: "server_type"
         type: "dropdown"
-        options: ["cx22", "cx32", "cx42"]
-        required: true
+        options: ["cx11", "cpx11","cx22", "cpx21","cx32", "cpx31","cx42", "cpx41","cx52", "cpx51"]
+        required: "true"
       - name: "location"
         type: "dropdown"
         options: ["fsn1", "nbg1", "hel1"]
-        required: true
-      - name: "is_enabled"
+        required: "true"
+  - id: 3
+    name: "x509 Certificate Manager: List Certs"
+    description: "Eine detaillierte Erklärung findest du in der README.md."
+    path: "/opt/powerbook/x509-certificate-manager/list_certs.yaml"
+  - id: 4
+    name: "x509 Certificate Manager: Create Cert"
+    description: "Eine detaillierte Erklärung findest du in der README.md."
+    path: "/opt/powerbook/x509-certificate-manager/create_cert.yaml"
+    variables:
+      - name: "hostname"
+        type: "text"
+        required: "true"
+      - name: "server_cert"
         type: "checkbox"
-        required: false
+        required: "true"
+      - name: "client_cert"
+        type: "checkbox"
+        required: "true"
+  - id: 5
+    name: "x509 Certificate Manager: Delete Cert"
+    description: "Eine detaillierte Erklärung findest du in der README.md."
+    path: "/opt/powerbook/x509-certificate-manager/delete_cert.yaml"
+    variables:
+      - name: "hostname"
+        type: "text"
+        required: "true"
+  - id: 6
+    name: "SSH Key Deployment"
+    description: "Wichtig! README lesen! SSH Key muss mit Username vorher in der vars.yaml abgelegt werden und auf dem dev Server dann ein git pull gemacht werden!"
+    path: "/opt/powerbook/ssh-key-deployment/main.yml"
+    variables:
+      - name: "hostname"
+        type: "text"
+        required: "false"
+      - name: "user"
+        type: "text"
+        required: "true"
+      - name: "action"
+        type: "dropdown"
+        options: ["add", "delete"]
+        required: "true"
