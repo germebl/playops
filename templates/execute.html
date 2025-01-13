@@ -21,9 +21,9 @@
                             <label class="form-label fw-bold" for="{{ var.name }}">{{ var.name }}</label>
                             <div class="input-group">
                                 {% if var.type == 'text' %}
-                                    <input type="text" name="{{ var.name }}" class="form-control" required="{{ var.required|lower }}" placeholder="Geben Sie {{ var.name }} ein" />
+                                    <input type="text" name="{{ var.name }}" class="form-control" {% if var.required == 'true' %}required{% endif %} placeholder="Geben Sie {{ var.name }} ein" />
                                 {% elif var.type == 'dropdown' %}
-                                    <select name="{{ var.name }}" class="form-select" required="{{ var.required|lower }}">
+                                    <select name="{{ var.name }}" class="form-select" {% if var.required == 'true' %}required{% endif %}>
                                         <option value="" disabled selected>Wählen Sie eine Option</option>
                                         {% for option in var.options %}
                                             <option value="{{ option }}">{{ option }}</option>
