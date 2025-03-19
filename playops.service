@@ -1,0 +1,14 @@
+[Unit]
+Description=PlayOps - Playbook Runner
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/opt/playops
+Environment="PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/root/.local/bin:/opt/playops/venv/bin"
+ExecStart=/opt/playops/venv/bin/python3 /opt/playops/app.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

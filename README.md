@@ -40,10 +40,10 @@ PlayOps ist eine einfache Webanwendung zum Ausführen von Ansible-Playbooks übe
 
 4. **Server starten**
    ```bash
-   flask run
+   python3 app.py
    ```
 
-   Die Anwendung wird standardmäßig unter `http://127.0.0.1:5000` laufen.
+   Die Anwendung wird standardmäßig unter `http://0.0.0.0:3000` laufen.
 
 ## Zugangsdaten WebUI
 Aktuell noch in der app.py wird der Benutzer und das Passwort definiert. Das könnte auf jeden Fall noch optimiert werden.
@@ -76,6 +76,12 @@ display_skipped_hosts = false
 1. **Login**: Melde dich über das Login-Formular an.
 2. **Playbook-Auswahl**: Wähle ein Playbook aus der Liste und fülle die benötigten Variablen aus.
 3. **Ausführung starten**: Starte das Playbook und überprüfe den Output.
+
+## Systemd Service
+
+Das Playbook wird primär vom Ansible Master (dev.heyday.lan) ausgeführt und liegt in `/opt/playops`. Im Verzeichnis liegt eine `playops.service` die für dieses Verzeichnis konfiguriert ist und nach `/etc/systemd/system/playops.service` kopiert werden kann. Danach muss der Dienst aktiviert und gestartet werden mit `systemctl enable --now playops.service`.
+
+Dadurch ist der Dienst Restart sicher.
 
 ## Lizenz
 
